@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { FlatList, Text } from "react-native";
+import { FlatList, ScrollView, Text, View } from "react-native";
 import WItem from "./w-item";
+import { useWeatherStore } from "../../store/weather-store";
+import { DAYS, getWeratherInfoByCode } from "../../utils";
 
 export type Weather = {
   day: string;
@@ -46,12 +48,28 @@ const DummyWeather: Weather[] = [
 ];
 const WList = () => {
   const [forecastData, setForecastData] = useState(DummyWeather);
+  const dailyForecast = useWeatherStore((state) => state.daily);
   return (
-    <FlatList
-      data={forecastData}
-      renderItem={({ item }) => <WItem w={item} />}
-      keyExtractor={(item) => item.day}
-    />
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View className="flex-1">
+        {dailyForecast.weathercode.map((code, index) => {
+          const temperature = dailyForecast.temperature_2m_max[index];
+          const date = new Date(dailyForecast.time[index]);
+          const dayOfWeek = DAYS[date.getDay()];
+          const condition = getWeratherInfoByCode(code)?.label;
+          const img = getWeratherInfoByCode(code)?.image;
+          return (
+            <WItem
+              key={index}
+              temp={temperature}
+              day={dayOfWeek}
+              weatherCodition={condition!}
+              wImage={img}
+            />
+          );
+        })}
+      </View>
+    </ScrollView>
   );
 };
 

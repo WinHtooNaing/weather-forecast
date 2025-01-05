@@ -3,7 +3,10 @@ import React from "react";
 import { Pressable, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Theme } from "../../theme";
-const Header = () => {
+type HeaderProps = {
+  cityname: String;
+};
+const Header = ({ cityname }: HeaderProps) => {
   return (
     <View className="flex-row justify-between items-center mt-4 mb-4">
       <Pressable hitSlop={20}>
@@ -13,7 +16,7 @@ const Header = () => {
       </Pressable>
       <View className="flex-row items-center">
         <Ionicons name="location" size={26} color={Theme.orange} />
-        <Text className="text-xl font-bold">Yangon</Text>
+        <Text className="text-xl font-bold">{cityname}</Text>
       </View>
       <Pressable hitSlop={20}>
         <Link href="/forecast" asChild>
